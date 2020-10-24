@@ -1,4 +1,4 @@
 # crud
 curd notice board
-- msyql
-- nodejs
+- ~~msyql~~ MongoDB
+- Nodejs

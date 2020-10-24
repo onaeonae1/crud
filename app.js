@@ -1,31 +1,47 @@
 import express from "express";
-import mysql from "mysql";
+import session from "express-session";
+import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import bodyParser from "body-parser";
 import morgan from "morgan";
+import passport from "passport";
 import path from "path";
+import mongoose from "mongoose";
+import MongoStore from "connect-mongo";
 // my module import
-import {dbconfig} from "./config/database.js";
+import "./passport";
 import routes from "./routes";
 import {localsMiddleware} from "./middlewares";
-import mainRouter from "./router/mainRouter";
+import mainRouter from "./routers/mainRouter";
+import userRouter from "./routers/userRouter";
 const app = express();
+const CookieStore = MongoStore(session);
 //middleware settings
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 app.set('port', process.env.PORT || 3000);
 app.use(helmet());
-app.use(morgan("dev"));
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(morgan("dev"));
+
+
 //route , custom middleware settings
+app.use(
+  session({
+    secret:process.env.COOKIE_SECRET,
+    resave:true,
+    saveUninitialized:false,
+    store: new CookieStore({ mongooseConnection: mongoose.connection }),
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(localsMiddleware);
 app.use(routes.home, mainRouter);
-
+app.use(routes.users, userRouter);
 
 // configuration =========================
-app.listen(app.get('port'), () => {
-  console.log('Express server listening on port ' + app.get('port'));
-});
 
 export default app;
