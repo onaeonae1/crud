@@ -1,3 +1,18 @@
 extends layouts/main
+include mixins/feedBlock
 block content
-    p User Detail
+    img.profile_avatar(src=user.avatarUrl)
+    h3.profile__username=user.name
+    h4.profile__status=user.status
+    if loggedUser===null
+    else if user.id===loggedUser.id
+        .profile__btns
+            a(href=`/users${routes.editProfile}`)
+                button Edit profile
+            a(href=`/users${routes.changePassword}`)
+                button Change Password
+    .profile__feeds
+        each item in user.feeds
+            li
+                a(href=routes.feedDetail(item.id))
+                    #{item.title}

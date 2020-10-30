@@ -1,0 +1,7 @@
+extends layouts/main
+include mixins/commentBlock
+block content
+    h1.feedTitle #{feed.title}
+    h2.feedTime #{feed.createdAt}
+    h3.feedCreator #{feed.creator.name}
+    .feedText #{feed.description}

@@ -2,50 +2,49 @@ import passport from "passport";
 import routes from "../routes";
 import User from "../models/User";
 
-export const getJoin = (req, res) => {
-  res.render("join", { pageTitle: "Join" });
-};
 
-export const postJoin = async (req, res, next) => {
+
+export const userDetail = async (req, res) =>{
+  console.log("user detail");
   const {
-    body: { name, email, password, password2 }
+    params : {id}
   } = req;
-  if (password !== password2) {
-    res.status(400);
-    res.render("join", { pageTitle: "Join" });
-  } else {
-    try {
-      const user = await User({
-        name,
-        email
-      });
-      await User.register(user, password);
-      next();
-    } catch (error) {
-      console.log(error);
-      res.redirect(routes.home);
-    }
+  try{
+    const user = await User.findById(id).populate("feeds");
+    console.log(user);
+    res.render("userDetail", {pageTitle: "User Detail", user});
   }
+  catch(error){
+    console.log(error);
+    res.redirect(routes.home);
+  }
+  //res.render("userDetail", { pageTitle: "User Detail" });
 };
-
-export const getLogin = (req, res) =>
-  res.render("login", { pageTitle: "Log In" });
-
-export const postLogin = passport.authenticate("local", {
-  failureRedirect: routes.login,
-  successRedirect: routes.home
-});
-
-export const logout = (req, res) => {
-  // To Do: Process Log Out
-  console.log("Successfully Logged Out.");
-  req.logout();
-  res.redirect(routes.home);
-};
-
-export const userDetail = (req, res) =>
-  res.render("userDetail", { pageTitle: "User Detail" });
-export const editProfile = (req, res) =>
+export const getEditProfile = (req, res) =>{
   res.render("editProfile", { pageTitle: "Edit Profile" });
-export const changePassword = (req, res) =>
+};
+export const postEditProfile = async (req,res) =>{
+  console.log(req.file.path);
+  const {
+    body:{status},
+    file
+  } = req;
+  try{
+    await User.findByIdAndUpdate(req.user.id,{
+      status,
+      avatarUrl: file? file.path : req.user.avatarUrl
+    });
+  }
+  catch(error){
+    console.log(error);
+    res.redirect(`/users${routes.editProfile}`);
+  }
+   res.redirect(routes.me); //유저 프로필로 리다이렉트
+};
+export const getChangePassword = (req, res) =>{
   res.render("changePassword", { pageTitle: "Change Password" });
+};
+export const postChangePassword = (req,res) =>{
+  console.log(req.body);
+  res.redirect(routes.home);
+}

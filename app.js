@@ -14,6 +14,7 @@ import routes from "./routes";
 import {localsMiddleware} from "./middlewares";
 import mainRouter from "./routers/mainRouter";
 import userRouter from "./routers/userRouter";
+import feedRouter from "./routers/feedRouter";
 const app = express();
 const CookieStore = MongoStore(session);
 //middleware settings
@@ -41,7 +42,7 @@ app.use(passport.session());
 app.use(localsMiddleware);
 app.use(routes.home, mainRouter);
 app.use(routes.users, userRouter);
-
+app.use(routes.feeds, feedRouter);
 // configuration =========================
 
 export default app;

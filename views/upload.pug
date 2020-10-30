@@ -1,0 +1,9 @@
+extends layouts/main
+block content
+    form(action=routes.upload, method="post")
+        input(type="text", name="title", placeholder="제목", required=true)
+        div.fileUpload
+            label(for="file") Image Upload
+            input(type="file", id="file", name="imageFile", required=true, accept="image/*")
+        textarea(name="description", placeholder="설명", required=true)
+        input(type="submit", value="글 작성 완료")

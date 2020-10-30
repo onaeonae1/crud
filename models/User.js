@@ -6,13 +6,17 @@ const UserSchema = new mongoose.Schema({
   email: String,
   avatarUrl: String,
   githubId: Number,
+  status:{
+    type:String,
+    default:"New User!"
+  },
   comments: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Comment",
     },
   ],
-  Feeds: [
+  feeds: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Feed",
