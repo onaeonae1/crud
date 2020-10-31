@@ -13,7 +13,8 @@ export const home = async (req,res) =>{
     try{
         //전체 Feed들을 가져온다.
         const feeds = await Feed.find({}).sort({ _id: -1 }).populate("creator");
-        if(feeds.$isEmpty()){
+        console.log(feeds);
+        if(!feeds){
             res.render("initial", {pageTitle:"Empty Home"});
         }
         res.render("home", {pageTitle:"Home", feeds});
