@@ -8,7 +8,7 @@ export const localsMiddleware = (req,res,next) =>{
 };
 
 const multerImage = multer({
-    dest:"uploads/images",
+    dest:"uploads/images/",
 });
 const multerAvatar = multer({
     dest: "uploads/avatar/"

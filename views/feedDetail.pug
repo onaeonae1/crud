@@ -4,4 +4,14 @@ block content
     h1.feedTitle #{feed.title}
     h2.feedTime #{feed.createdAt}
     h3.feedCreator #{feed.creator.name}
+    .feedImages
+        each item in feed.imageUrls
+            img.feedSingleImage(src=item)
     .feedText #{feed.description}
+    if loggedUser===null
+    else if feed.creator.id===loggedUser.id
+        .feed__btns
+            a(href=routes.editFeed(feed.id))
+                button ✏ Edit Feed ✏
+            a(href=routes.deleteFeed(feed.id))
+                button ❌ Delete Feed ❌

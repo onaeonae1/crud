@@ -1,5 +1,6 @@
-
 mixin feedBlock(feed={})
     .feedBlock
         a(href=routes.feedDetail(feed.id))
-        img.feedImage(src=feed.imageUrl)
+            img.feedImage(src=feed.thumbnail)
+            h4 #{feed.title}
+            p #{feed.description}

@@ -10,7 +10,8 @@ import {
   logout,
   getFeedUpload,
   postFeedUpload,
-  getNotes
+  getNotes,
+  getMe
  } from "../controllers/mainController"; 
 import {
   uploadImage
@@ -27,6 +28,7 @@ mainRouter.get(routes.notes, getNotes);
 mainRouter.get(routes.home, home);
 mainRouter.get(routes.search, search);
 mainRouter.get(routes.logout, logout);
+mainRouter.get(routes.me, getMe);
 
 mainRouter.get(routes.upload,getFeedUpload);
 mainRouter.post(routes.upload, uploadImage, postFeedUpload);

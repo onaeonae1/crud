@@ -2,8 +2,6 @@ import passport from "passport";
 import routes from "../routes";
 import User from "../models/User";
 
-
-
 export const userDetail = async (req, res) =>{
   console.log("user detail");
   const {
@@ -11,11 +9,9 @@ export const userDetail = async (req, res) =>{
   } = req;
   try{
     const user = await User.findById(id).populate("feeds");
-    console.log(user);
     res.render("userDetail", {pageTitle: "User Detail", user});
   }
   catch(error){
-    console.log(error);
     res.redirect(routes.home);
   }
   //res.render("userDetail", { pageTitle: "User Detail" });
@@ -24,7 +20,6 @@ export const getEditProfile = (req, res) =>{
   res.render("editProfile", { pageTitle: "Edit Profile" });
 };
 export const postEditProfile = async (req,res) =>{
-  console.log(req.file.path);
   const {
     body:{status},
     file
@@ -32,7 +27,7 @@ export const postEditProfile = async (req,res) =>{
   try{
     await User.findByIdAndUpdate(req.user.id,{
       status,
-      avatarUrl: file? file.path : req.user.avatarUrl
+      avatarUrl: file? `../uploads/avatar/${file.filename}` : req.user.avatarUrl
     });
   }
   catch(error){

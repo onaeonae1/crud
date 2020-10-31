@@ -8,11 +8,20 @@ import passport from "passport";
  dont need any id fields. 
 */
 //Home Functions
-export const home = (req,res) =>{
-    //TODO : need to show feeds from database
-    console.log("Home");
+export const home = async (req,res) =>{
     console.log("Connecting from : ",req.ip);
-    res.render("home", {pageTitle:"Home"});
+    try{
+        //전체 Feed들을 가져온다.
+        const feeds = await Feed.find({}).sort({ _id: -1 }).populate("creator");
+        if(feeds.$isEmpty()){
+            res.render("initial", {pageTitle:"Empty Home"});
+        }
+        res.render("home", {pageTitle:"Home", feeds});
+    }
+    catch(error){
+        console.log(error);
+        res.render("initial", {pageTitle:"Empty Home"});
+    }
 };
 export const getNotes = (req,res)=>{
     res.render("notes");
@@ -22,6 +31,15 @@ export const search = (req,res)=>{
     console.log("search");
     res.render("search");
 };
+export const getMe = (req,res)=>{
+    if(req.user.id){
+        res.redirect(`${routes.users}/${req.user.id}`);
+    }
+    else{
+        res.redirect(routes.home);
+    }
+}
+
 //User Join and Login
 export const getJoin = (req, res) => {
     res.render("join", { pageTitle: "Join" });
@@ -73,12 +91,18 @@ export const postFeedUpload = async (req,res)=>{
     console.log(req.file);
     //form에서 데이터를 불러와서 DB에 새로운 Feed 생성
     const{
-        body:{title, description}
+        body:{title, description},
+        file
     } = req;
+    var imageUrls = [];
+    if(file){
+        imageUrls.push(`../uploads/images/${file.filename}`);
+    }
     const newFeed = await Feed.create({
         title,
         description,
         creator:req.user.id,
+        imageUrls,
     });
     //새 feed를 만들면 id가 배정됨. 이를 유저에 추가
     console.log(`created feed : ${newFeed.id}`);

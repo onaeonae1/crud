@@ -13,6 +13,9 @@ block content
                 button Change Password
     .profile__feeds
         each item in user.feeds
-            li
-                a(href=routes.feedDetail(item.id))
-                    #{item.title}
+            +feedBlock({
+                id:item._id,
+                title:item.title,
+                description:item.description,
+                thumbnail:item.imageUrls[0]
+            })
